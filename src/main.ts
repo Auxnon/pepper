@@ -2,6 +2,16 @@ import './style.css'
 import * as THREE from 'three'
 import { Card } from './Card'
 import { Deck } from './Deck'
+import {
+  CAMERA_POSITION,
+  CAMERA_LOOK_AT,
+  TABLE_WIDTH,
+  TABLE_HEIGHT,
+  TABLE_DEPTH,
+  CARD_SPACING,
+  PLAYER_Z_POSITION,
+  OPPONENT_Z_POSITION
+} from './constants'
 
 class CardGame {
   private scene: THREE.Scene
@@ -29,8 +39,8 @@ class CardGame {
       0.1,
       1000
     )
-    this.camera.position.set(0, 10, 12)
-    this.camera.lookAt(0, 0, 0)
+    this.camera.position.set(CAMERA_POSITION.x, CAMERA_POSITION.y, CAMERA_POSITION.z)
+    this.camera.lookAt(CAMERA_LOOK_AT.x, CAMERA_LOOK_AT.y, CAMERA_LOOK_AT.z)
 
     // Initialize renderer
     const canvas = document.getElementById('game-canvas') as HTMLCanvasElement
@@ -92,19 +102,19 @@ class CardGame {
 
   private createTable(): void {
     // Table surface
-    const tableGeometry = new THREE.BoxGeometry(16, 0.5, 10)
+    const tableGeometry = new THREE.BoxGeometry(TABLE_WIDTH, TABLE_HEIGHT, TABLE_DEPTH)
     const tableMaterial = new THREE.MeshStandardMaterial({ 
       color: 0x1a4d2e,
       roughness: 0.7,
       metalness: 0.1
     })
     const table = new THREE.Mesh(tableGeometry, tableMaterial)
-    table.position.y = -0.25
+    table.position.y = -TABLE_HEIGHT / 2
     table.receiveShadow = true
     this.tableGroup.add(table)
 
     // Table edge
-    const edgeGeometry = new THREE.BoxGeometry(16.2, 0.3, 10.2)
+    const edgeGeometry = new THREE.BoxGeometry(TABLE_WIDTH + 0.2, 0.3, TABLE_DEPTH + 0.2)
     const edgeMaterial = new THREE.MeshStandardMaterial({ 
       color: 0x4a2511,
       roughness: 0.8
@@ -114,8 +124,8 @@ class CardGame {
     this.tableGroup.add(edge)
 
     // Player area markers
-    this.createPlayerMarker(0, 0, 4, 'Player')
-    this.createPlayerMarker(0, 0, -4, 'Opponent')
+    this.createPlayerMarker(0, 0, PLAYER_Z_POSITION, 'Player')
+    this.createPlayerMarker(0, 0, OPPONENT_Z_POSITION, 'Opponent')
   }
 
   private createPlayerMarker(x: number, y: number, z: number, label: string): void {
@@ -249,9 +259,8 @@ class CardGame {
     
     // Position cards in player's area
     dealtCards.forEach((card, index) => {
-      const spacing = 1.5
-      const startX = -(dealtCards.length - 1) * spacing / 2
-      card.setTargetPosition(startX + index * spacing, 0, 4)
+      const startX = -(dealtCards.length - 1) * CARD_SPACING / 2
+      card.setTargetPosition(startX + index * CARD_SPACING, 0, PLAYER_Z_POSITION)
     })
 
     this.cards = dealtCards

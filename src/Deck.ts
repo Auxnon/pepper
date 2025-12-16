@@ -1,5 +1,11 @@
 import * as THREE from 'three'
 import { Card } from './Card'
+import {
+  CARD_WIDTH,
+  CARD_HEIGHT,
+  CARD_THICKNESS,
+  DECK_POSITION
+} from './constants'
 
 export class Deck {
   private scene: THREE.Scene
@@ -9,7 +15,7 @@ export class Deck {
 
   constructor(scene: THREE.Scene) {
     this.scene = scene
-    this.deckPosition = new THREE.Vector3(-6, 0, 0)
+    this.deckPosition = new THREE.Vector3(DECK_POSITION.x, DECK_POSITION.y, DECK_POSITION.z)
     
     // Create visual deck representation
     this.createDeckPile()
@@ -17,7 +23,7 @@ export class Deck {
 
   private createDeckPile(): void {
     // Create a stack of card representations
-    const cardGeometry = new THREE.BoxGeometry(1, 0.02, 1.4)
+    const cardGeometry = new THREE.BoxGeometry(CARD_WIDTH, CARD_THICKNESS, CARD_HEIGHT)
     const cardMaterial = new THREE.MeshStandardMaterial({ 
       color: 0x4444ff,
       roughness: 0.5
@@ -27,7 +33,7 @@ export class Deck {
       const card = new THREE.Mesh(cardGeometry, cardMaterial)
       card.position.set(
         this.deckPosition.x,
-        this.deckPosition.y + i * 0.02,
+        this.deckPosition.y + i * CARD_THICKNESS,
         this.deckPosition.z
       )
       card.rotation.x = Math.PI / 2
@@ -103,7 +109,7 @@ export class Deck {
 
             const finalPos = new THREE.Vector3(
               this.deckPosition.x,
-              this.deckPosition.y + index * 0.02,
+              this.deckPosition.y + index * CARD_THICKNESS,
               this.deckPosition.z
             )
             const finalRot = new THREE.Euler(Math.PI / 2, 0, 0)
@@ -118,7 +124,7 @@ export class Deck {
             // Reset to final position
             card.position.set(
               this.deckPosition.x,
-              this.deckPosition.y + index * 0.02,
+              this.deckPosition.y + index * CARD_THICKNESS,
               this.deckPosition.z
             )
             card.rotation.set(Math.PI / 2, 0, 0)

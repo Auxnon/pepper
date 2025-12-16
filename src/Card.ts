@@ -1,4 +1,12 @@
 import * as THREE from 'three'
+import {
+  CARD_WIDTH,
+  CARD_HEIGHT,
+  CARD_THICKNESS,
+  CARD_BORDER_RADIUS,
+  CARD_LIFT_HEIGHT,
+  ANIMATION_LERP_FACTOR
+} from './constants'
 
 export class Card {
   public mesh: THREE.Mesh
@@ -26,26 +34,20 @@ export class Card {
   }
 
   private createCardMesh(): THREE.Mesh {
-    // Card dimensions
-    const width = 1
-    const height = 1.4
-    const thickness = 0.02
-
     // Create rounded rectangle shape for card
     const shape = new THREE.Shape()
-    const radius = 0.1
-    shape.moveTo(-width/2 + radius, -height/2)
-    shape.lineTo(width/2 - radius, -height/2)
-    shape.quadraticCurveTo(width/2, -height/2, width/2, -height/2 + radius)
-    shape.lineTo(width/2, height/2 - radius)
-    shape.quadraticCurveTo(width/2, height/2, width/2 - radius, height/2)
-    shape.lineTo(-width/2 + radius, height/2)
-    shape.quadraticCurveTo(-width/2, height/2, -width/2, height/2 - radius)
-    shape.lineTo(-width/2, -height/2 + radius)
-    shape.quadraticCurveTo(-width/2, -height/2, -width/2 + radius, -height/2)
+    shape.moveTo(-CARD_WIDTH/2 + CARD_BORDER_RADIUS, -CARD_HEIGHT/2)
+    shape.lineTo(CARD_WIDTH/2 - CARD_BORDER_RADIUS, -CARD_HEIGHT/2)
+    shape.quadraticCurveTo(CARD_WIDTH/2, -CARD_HEIGHT/2, CARD_WIDTH/2, -CARD_HEIGHT/2 + CARD_BORDER_RADIUS)
+    shape.lineTo(CARD_WIDTH/2, CARD_HEIGHT/2 - CARD_BORDER_RADIUS)
+    shape.quadraticCurveTo(CARD_WIDTH/2, CARD_HEIGHT/2, CARD_WIDTH/2 - CARD_BORDER_RADIUS, CARD_HEIGHT/2)
+    shape.lineTo(-CARD_WIDTH/2 + CARD_BORDER_RADIUS, CARD_HEIGHT/2)
+    shape.quadraticCurveTo(-CARD_WIDTH/2, CARD_HEIGHT/2, -CARD_WIDTH/2, CARD_HEIGHT/2 - CARD_BORDER_RADIUS)
+    shape.lineTo(-CARD_WIDTH/2, -CARD_HEIGHT/2 + CARD_BORDER_RADIUS)
+    shape.quadraticCurveTo(-CARD_WIDTH/2, -CARD_HEIGHT/2, -CARD_WIDTH/2 + CARD_BORDER_RADIUS, -CARD_HEIGHT/2)
 
     const extrudeSettings = {
-      depth: thickness,
+      depth: CARD_THICKNESS,
       bevelEnabled: true,
       bevelThickness: 0.01,
       bevelSize: 0.01,
@@ -80,7 +82,7 @@ export class Card {
 
   public lift(): void {
     this.isLifted = true
-    this.targetPosition.y = 1.5
+    this.targetPosition.y = CARD_LIFT_HEIGHT
   }
 
   public drop(): void {
@@ -105,12 +107,12 @@ export class Card {
 
   public update(): void {
     // Smooth interpolation to target position
-    this.mesh.position.lerp(this.targetPosition, 0.1)
+    this.mesh.position.lerp(this.targetPosition, ANIMATION_LERP_FACTOR)
     
     // Smooth interpolation to target rotation
-    this.mesh.rotation.x += (this.targetRotation.x - this.mesh.rotation.x) * 0.1
-    this.mesh.rotation.y += (this.targetRotation.y - this.mesh.rotation.y) * 0.1
-    this.mesh.rotation.z += (this.targetRotation.z - this.mesh.rotation.z) * 0.1
+    this.mesh.rotation.x += (this.targetRotation.x - this.mesh.rotation.x) * ANIMATION_LERP_FACTOR
+    this.mesh.rotation.y += (this.targetRotation.y - this.mesh.rotation.y) * ANIMATION_LERP_FACTOR
+    this.mesh.rotation.z += (this.targetRotation.z - this.mesh.rotation.z) * ANIMATION_LERP_FACTOR
   }
 
   public remove(): void {
